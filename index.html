@@ -62,7 +62,10 @@
         document.querySelector('h1').textContent = t ? t.slice(0, 120) : 'Подарок от MY FOODIE';
         document.title = document.querySelector('h1').textContent;
         document.querySelector('.card ul').style.display = 'none';
-        document.querySelector('.note').textContent = 'После подписки проверьте почту и подтвердите email — сразу после этого придёт письмо с подарком.';
+        document.addEventListener('DOMContentLoaded', function () {
+          var n = document.querySelector('.note');
+          if (n) n.textContent = 'После подписки проверьте почту и подтвердите email — сразу после этого придёт письмо с подарком.';
+        });
       })();
     </script>
     <script src="https://shared.s3.unisender.ru/popups/popup.js"></script>

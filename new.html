@@ -1,0 +1,73 @@
+<!doctype html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Ссылка на новую форму</title>
+<meta name="robots" content="noindex">
+<style>
+  :root { --green:#5a9e2f; --text:#2b2b2b; --muted:#6b6b6b; --bg:#f4f7ef; --line:#cfd8c4; }
+  * { box-sizing:border-box; }
+  body { margin:0; background:var(--bg); color:var(--text); font-family:Arial, Helvetica, sans-serif; }
+  .wrap { max-width:640px; margin:0 auto; padding:32px 16px 48px; }
+  .card { background:#fff; border-radius:16px; padding:28px 20px; box-shadow:0 4px 24px rgba(0,0,0,.06); }
+  .brand { font-size:13px; letter-spacing:.12em; text-transform:uppercase; color:var(--green); font-weight:bold; margin:0 0 12px; }
+  h1 { font-size:22px; line-height:1.3; margin:0 0 16px; }
+  label { display:block; font-weight:bold; margin:18px 0 6px; font-size:15px; }
+  .hint { color:var(--muted); font-size:14px; margin:0 0 6px; line-height:1.4; }
+  textarea, input { width:100%; font-size:15px; padding:10px 12px; border:1px solid var(--line); border-radius:10px; font-family:inherit; }
+  textarea { height:130px; resize:vertical; font-family:Menlo, Consolas, monospace; font-size:12px; }
+  button { margin-top:18px; width:100%; height:48px; border:0; border-radius:10px; background:var(--green); color:#fff; font-size:16px; font-weight:bold; cursor:pointer; }
+  .out { display:none; margin-top:22px; padding:16px; border-radius:12px; background:#eef6e6; }
+  .out a { word-break:break-all; color:#2f6b12; font-size:14px; }
+  .err { display:none; margin-top:16px; color:#b42318; font-size:14px; }
+  .copy { background:#2b2b2b; margin-top:12px; }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <div class="card">
+    <p class="brand">MY FOODIE</p>
+    <h1>Ссылка на новую форму подписки</h1>
+
+    <label for="code">1. Код формы из Unisender</label>
+    <p class="hint">Unisender → Формы → ваша новая форма → вкладка «Интеграция» → скопируйте код JS целиком и вставьте сюда.</p>
+    <textarea id="code" placeholder='&lt;div id="unisender-subscribe-form-…" data-url="…" data-settings="…"&gt;&lt;/div&gt; …'></textarea>
+
+    <label for="title">2. Заголовок страницы</label>
+    <p class="hint">Что увидит человек сверху, например: «Чек-лист „Ошибки детского питания“ в подарок».</p>
+    <input id="title" type="text" maxlength="120">
+
+    <button id="make" type="button">Получить ссылку</button>
+    <p class="err" id="err">Не нашёл в коде data-url и data-settings. Скопируйте код с вкладки «Интеграция» полностью, без изменений.</p>
+
+    <div class="out" id="out">
+      <strong>Готово, эта ссылка для чат-бота:</strong><br><br>
+      <a id="link" href="#" target="_blank" rel="noopener"></a>
+      <button class="copy" id="copy" type="button">Скопировать ссылку</button>
+    </div>
+  </div>
+</div>
+<script>
+  var base = location.href.replace(/new\.html.*$/, '');
+  document.getElementById('make').onclick = function () {
+    var code = document.getElementById('code').value;
+    var u = (code.match(/subscribe-form\/view\/([a-z0-9]+)/i) || [])[1];
+    var s = (code.match(/data-settings=["']([a-z0-9]+)["']/i) || [])[1];
+    var err = document.getElementById('err'), out = document.getElementById('out');
+    if (!u || !s) { err.style.display = 'block'; out.style.display = 'none'; return; }
+    err.style.display = 'none';
+    var t = document.getElementById('title').value.trim();
+    var url = base + '?u=' + u + '&s=' + s + (t ? '&t=' + encodeURIComponent(t) : '');
+    var a = document.getElementById('link');
+    a.href = url; a.textContent = url;
+    out.style.display = 'block';
+  };
+  document.getElementById('copy').onclick = function () {
+    var url = document.getElementById('link').href, b = this;
+    try { navigator.clipboard.writeText(url).then(function(){ b.textContent = 'Скопировано'; }); }
+    catch (e) { b.textContent = 'Выделите ссылку и скопируйте вручную'; }
+  };
+</script>
+</body>
+</html>

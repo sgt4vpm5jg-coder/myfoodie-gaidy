@@ -49,6 +49,22 @@
 
     <!-- Форма Unisender «Набор гайдов — подписка». Текст и поля правятся в Unisender, сюда изменения подтянутся сами. -->
     <div id="unisender-subscribe-form-421153" data-url="https://cp.unisender.com/ru/v5/subscribe-form/view/6egnjsbgcy7se1fza76bn1inobbrjpjidjxeqxqo" data-settings="6upmk8bdc1ssa36tyu1xtgw56hyo458azu13p7hmh8kjk65gf1wyo"></div>
+    <script>
+      // Другой подарок: ссылка вида ?u=<код формы>&s=<настройки>&t=<заголовок>, её собирает страница new.html
+      (function () {
+        var p = new URLSearchParams(location.search);
+        var u = p.get('u'), s = p.get('s'), t = p.get('t');
+        var ok = /^[a-z0-9]{20,80}$/i;
+        if (!u || !s || !ok.test(u) || !ok.test(s)) return;
+        var f = document.getElementById('unisender-subscribe-form-421153');
+        f.setAttribute('data-url', 'https://cp.unisender.com/ru/v5/subscribe-form/view/' + u);
+        f.setAttribute('data-settings', s);
+        document.querySelector('h1').textContent = t ? t.slice(0, 120) : 'Подарок от MY FOODIE';
+        document.title = document.querySelector('h1').textContent;
+        document.querySelector('.card ul').style.display = 'none';
+        document.querySelector('.note').textContent = 'После подписки проверьте почту и подтвердите email — сразу после этого придёт письмо с подарком.';
+      })();
+    </script>
     <script src="https://shared.s3.unisender.ru/popups/popup.js"></script>
     <script>
       window.popupForSubscriptionsForm("https://apig.unisender.com");
